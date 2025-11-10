@@ -1,0 +1,279 @@
+#include<stdio.h>
+#include<malloc.h>
+struct node{
+    int data;
+    struct node*next;
+};
+struct node * start=NULL;
+struct node *create_l(struct node*);
+struct node *insert_beg(struct node*);
+struct node *insert_end(struct node*);
+struct node *insert_after(struct node*);
+struct node *insert_before(struct node*);
+struct node *display(struct node*);
+struct node *delete_beg(struct node*);
+struct node *delete_end(struct node*);
+struct node *delete_node(struct node*);
+
+struct node *create_l(struct node *start){
+    struct node *newnode,*ptr;
+    int num;
+    printf("\n enter -1 to exit");
+    printf("\n enter data");
+    scanf("%d",&num);
+    while(num!=-1){
+            newnode=(struct node*)malloc(sizeof(struct node*));
+            newnode->data=num;
+            if(start==NULL){
+                newnode->next=NULL;
+                start=newnode;
+            }
+            else{
+                    ptr=start;
+                    while(ptr->next!=NULL){
+                            ptr=ptr->next;
+
+                    }
+                    ptr->next=newnode;
+                    newnode->next=NULL;
+            }
+            printf("enter data:");
+            scanf("%d",&num);
+
+
+    }
+    return start;
+};
+
+
+struct node *insert_beg(struct node *start) {
+    struct node *newnode;
+    int num;
+
+    printf("Enter data: ");
+    scanf("%d", &num);
+
+    newnode = (struct node *)malloc(sizeof(struct node));
+    if (newnode == NULL) {
+        printf("Memory allocation failed.\n");
+        return start;
+    }
+
+    newnode->data = num;
+    newnode->next = start;
+    start = newnode;
+
+    return start;
+}
+ struct node *insert_end(struct node *start){
+     struct node *newnode,*ptr;
+     int num;
+     printf("enter data:");
+     newnode=(struct node*)malloc(sizeof(struct node));
+     newnode->data=num;
+     newnode->next=NULL;
+     ptr=start;
+     if(start==NULL){
+        start=newnode;
+     }
+     while(ptr->next!=NULL){
+        ptr=ptr->next;
+     }
+     ptr->next=newnode;
+     return start;
+
+ };
+
+
+struct node *insert_before(struct node *start) {
+    struct node *new_node, *ptr, *preptr;
+    int num, val;
+
+    printf("\nEnter the data: ");
+    scanf("%d", &num);
+    printf("\nEnter the value before which data has to be inserted: ");
+    scanf("%d", &val);
+
+    new_node = (struct node*)malloc(sizeof(struct node));
+    new_node->data = num;
+
+
+    if (start->data == val) {
+        new_node->next = start;
+        start = new_node;
+        return start;
+    }
+
+    ptr = start;
+    while (ptr->data != val && ptr->next != NULL) {
+        preptr = ptr;
+        ptr = ptr->next;
+    }
+
+    if (ptr->data == val) {
+        preptr->next = new_node;
+        new_node->next = ptr;
+    } else {
+        printf("\nValue not found in the list!\n");
+        free(new_node);
+    }
+
+    return start;
+}
+
+
+struct node *insert_after(struct node *start) {
+    struct node *new_node, *ptr;
+    int num, val;
+
+    printf("\nEnter the data: ");
+    scanf("%d", &num);
+    printf("\nEnter the value after which data has to be inserted: ");
+    scanf("%d", &val);
+
+    new_node = (struct node*)malloc(sizeof(struct node));
+    new_node->data = num;
+
+    ptr = start;
+    while (ptr != NULL && ptr->data != val)
+        ptr = ptr->next;
+
+    if (ptr == NULL) {
+        printf("\nValue not found in the list!\n");
+        free(new_node);
+    } else {
+        new_node->next = ptr->next;
+        ptr->next = new_node;
+    }
+
+    return start;
+}
+
+
+struct node *delete_beg(struct node *start) {
+    struct node *ptr;
+
+    if (start == NULL) {
+        printf("\nList is empty!\n");
+        return start;
+    }
+
+    ptr = start;
+    start = start->next;
+    free(ptr);
+
+    return start;
+}
+
+struct node *delete_end(struct node *start) {
+    if (start == NULL) {
+        printf("List is empty.\n");
+        return NULL;
+    }
+    if (start->next == NULL) {
+        free(start);
+        return NULL;
+    }
+    struct node *ptr = start, *preptr;
+    while (ptr->next != NULL) {
+        preptr = ptr;
+        ptr = ptr->next;
+    }
+    preptr->next = NULL;
+    free(ptr);
+    return start;
+}
+
+struct node *display(struct node *start) {
+    struct node *ptr = start;
+    if (ptr == NULL) {
+        printf("\nList is empty!\n");
+        return;
+    }
+
+    printf("\nLinked List: ");
+    while (ptr != NULL) {
+        printf("%d -> ", ptr->data);
+        ptr = ptr->next;
+    }
+    return start;
+}
+
+
+struct node *delete_node(struct node *start) {
+    if (start == NULL) {
+        printf("List is empty.\n");
+        return NULL;
+    }
+    int val;
+    printf("\nEnter the value to be deleted: ");
+    scanf("%d", &val);
+
+    if (start->data == val) {
+        return delete_beg(start);
+    }
+
+    struct node *ptr = start, *preptr = NULL;
+    while (ptr != NULL && ptr->data != val) {
+        preptr = ptr;
+        ptr = ptr->next;
+    }
+
+    if (ptr == NULL) {
+        printf("Value not found.\n");
+        return start;
+    }
+
+    preptr->next = ptr->next;
+    free(ptr);
+    return start;
+}
+
+int main(){
+    int choice;
+    printf("\n*** menu*** \n1.create list \n2.insert begining \n3.ilnsert at end \n4.insert after value \n5.insert before value" );
+    printf("\n6.delete at begining \n7.delete at end \n8.delete perticuler node");
+    printf("\n9.display \n10.exit");
+    while(1){
+          printf("\nenter your choices :");
+          scanf("%d",&choice);
+          switch(choice){
+
+                case 1:start=create_l(start);
+                        break;
+                case 2:start=insert_beg(start);
+                        break;
+
+                case 3:start=insert_end(start);
+                        break;
+                case 4:start=insert_after(start);
+                        break;
+                case 5:start=insert_before(start);
+                        break;
+                case 6:start=delete_beg(start);
+                        break;
+                case 7:start=delete_end(start);
+                        break;
+                case 8:start=delete_node(start);
+                        break;
+                case 9:start=display(start);
+                        break;
+                case 10:exit(0);
+                        break;
+                default:printf("invalid choice");
+                        break;
+
+    }
+    }
+    return 0;
+
+}
+
+
+
+
+
+
+
+
+
